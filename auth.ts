@@ -17,10 +17,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         let user = null;
 
         // logic to salt and hash password
-        const pwHash = saltAndHashPassword(credentials.password as string);
+        const pwHash = await saltAndHashPassword(credentials.password as string);
 
         // logic to verify if the user exists
-        user = await getUserFromDb(credentials.email, pwHash);
+        user = await getUserFromDb(credentials.email as string, pwHash);
 
         if (!user) {
           // No user found, so this is their first attempt to login
