@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { signUpFormSchema } from "@/lib/validation";
+import { createUserAccount } from "@/lib/appwrite/api";
 
 export default function SignUp() {
   const form = useForm<z.infer<typeof signUpFormSchema>>({
@@ -31,7 +32,8 @@ export default function SignUp() {
   });
 
   function onSubmit(values: z.infer<typeof signUpFormSchema>) {
-    console.log(values);
+    const newUser = createUserAccount(values);
+    console.log(newUser);
   }
 
   return (
