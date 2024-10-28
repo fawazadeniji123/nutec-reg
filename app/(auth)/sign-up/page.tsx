@@ -22,17 +22,38 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { Input } from "@/components/ui/input";
-import { signUpFormSchema } from "@/lib/validation";
+import { colleges } from "@/constants";
 import { createUserAccount } from "@/lib/appwrite/api";
+import { signUpFormSchema } from "@/lib/validation";
 
 export default function SignUp() {
   const form = useForm<z.infer<typeof signUpFormSchema>>({
     resolver: zodResolver(signUpFormSchema),
   });
 
-  function onSubmit(values: z.infer<typeof signUpFormSchema>) {
-    const newUser = createUserAccount(values);
+  async function onSubmit({
+    email,
+    name,
+    college,
+    passwordForm: { password },
+    department,
+  }: z.infer<typeof signUpFormSchema>) {
+    const newUser = await createUserAccount({
+      email,
+      name,
+      college,
+      department,
+      password,
+    });
     console.log(newUser);
   }
 
@@ -75,7 +96,44 @@ export default function SignUp() {
             />
             <FormField
               control={form.control}
-              name="password"
+              name="college"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>College</FormLabel>
+                  <FormControl>
+                    <Select {...field}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select your college" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {colleges.map((college) => (
+                          <SelectItem value={college} key={college}>
+                            {college}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="department"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Department</FormLabel>
+                  <FormControl>
+                    <Input placeholder="MTE | mechatronics" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="passwordForm.password"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
@@ -88,7 +146,7 @@ export default function SignUp() {
             />
             <FormField
               control={form.control}
-              name="confirmPassword"
+              name="passwordForm.confirm"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Confirm Password</FormLabel>

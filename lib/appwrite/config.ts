@@ -1,9 +1,8 @@
-import { Client, Databases, Storage, Account, Avatars } from "node-appwrite";
+import { Client, Databases, Storage, Account, Avatars } from "appwrite";
 
 export const client = new Client()
   .setEndpoint("https://cloud.appwrite.io/v1") // Your API Endpoint
-  .setProject(process.env.APPWRITE_PROJECT_ID!) // Your project ID
-  .setKey(process.env.APPWRITE_API_KEY!); // Your secret API key
+  .setProject("671d151f00201e04d448"); // Your project ID
 
 export const database = new Databases(client);
 export const storage = new Storage(client);
