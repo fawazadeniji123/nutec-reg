@@ -22,6 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -29,32 +30,94 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
 import { colleges } from "@/constants";
-import { createUserAccount } from "@/lib/appwrite/api";
+import { useUserContext } from "@/context/AuthContext";
+import { createUserAccount, signInUser } from "@/lib/appwrite/api";
 import { signUpFormSchema } from "@/lib/validation";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function SignUp() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { toast } = useToast();
+  const { checkAuthUser } = useUserContext();
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof signUpFormSchema>>({
     resolver: zodResolver(signUpFormSchema),
   });
 
-  async function onSubmit({
+  async function handleSignUp({
     email,
     name,
     college,
     passwordForm: { password },
     department,
+    matricNumber,
   }: z.infer<typeof signUpFormSchema>) {
-    const newUser = await createUserAccount({
-      email,
-      name,
-      college,
-      department,
-      password,
-    });
-    console.log(newUser);
+    try {
+      setIsLoading(true);
+      const newUser = await createUserAccount({
+        email,
+        name,
+        college,
+        department,
+        password,
+        matricNumber,
+      });
+
+      if (!newUser) {
+        setIsLoading(false);
+        return toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "There was a problem creating your account, please try again,",
+        });
+      }
+
+      const session = await signInUser({ email, password });
+
+      if (!session) {
+        setIsLoading(false);
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "Please login your new account",
+        });
+
+        return router.push("/sign-in");
+      }
+
+      const isLoggedIn = await checkAuthUser();
+
+      if (isLoggedIn) {
+        form.reset();
+
+        router.push("/");
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "Please login your new account",
+        });
+
+        return router.push("/sign-in");
+      }
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          "There was a problem creating your account, please try again,",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -67,7 +130,10 @@ export default function SignUp() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+          <form
+            onSubmit={form.handleSubmit(handleSignUp)}
+            className="grid gap-4"
+          >
             <FormField
               control={form.control}
               name="email"
@@ -133,6 +199,19 @@ export default function SignUp() {
             />
             <FormField
               control={form.control}
+              name="matricNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Matric Number</FormLabel>
+                  <FormControl>
+                    <Input placeholder="201917XX" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="passwordForm.password"
               render={({ field }) => (
                 <FormItem>
@@ -157,12 +236,19 @@ export default function SignUp() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full mt-5">
-              Sign Up
-            </Button>
-            <Button variant="outline" className="w-full">
+            {!isLoading ? (
+              <Button type="submit" className="w-full mt-5">
+                Sign Up
+              </Button>
+            ) : (
+              <Button disabled className="w-full mt-5">
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Please wait
+              </Button>
+            )}
+            {/* <Button variant="outline" className="w-full">
               Sign Up with Google
-            </Button>
+            </Button> */}
           </form>
         </Form>
         <div className="mt-4 text-center text-sm">

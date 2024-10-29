@@ -25,6 +25,8 @@ export const signUpFormSchema = z.object({
       "COLAMRUD",
       "COLPLANT",
       "COLPHEC",
+      "COLVET",
+      "COLANIM"
     ],
     {
       message: "Please select a valid college.",
@@ -32,6 +34,9 @@ export const signUpFormSchema = z.object({
   ),
   department: z.string().min(3, {
     message: "Department must be at least 3 characters.",
+  }),
+  matricNumber: z.string().min(4, {
+    message: "input valid matric number",
   }),
   passwordForm: z
     .object({

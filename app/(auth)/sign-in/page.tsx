@@ -23,16 +23,53 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useUserContext } from "@/context/AuthContext";
+import { useToast } from "@/hooks/use-toast";
+import { signInUser } from "@/lib/appwrite/api";
 import { signInFormSchema } from "@/lib/validation";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function SignIn() {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const { toast } = useToast();
+  const { checkAuthUser } = useUserContext();
+
   const form = useForm<z.infer<typeof signInFormSchema>>({
     resolver: zodResolver(signInFormSchema),
   });
 
-  function onSubmit(values: z.infer<typeof signInFormSchema>) {
-    console.log(values);
-  }
+  const handleSignin = async (user: z.infer<typeof signInFormSchema>) => {
+    setIsLoading(true);
+
+    const session = await signInUser(user);
+
+    if (!session) {
+      setIsLoading(false);
+      return toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "Login failed, please try again.",
+      });
+    }
+
+    const isLoggedIn = await checkAuthUser();
+
+    if (!isLoggedIn) {
+      setIsLoading(false);
+      return toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "Login failed, please try again.",
+      });
+    }
+
+    form.reset();
+
+    router.push("/");
+  };
 
   return (
     <Card className="mx-auto max-w-sm mt-10">
@@ -44,7 +81,10 @@ export default function SignIn() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-2">
+          <form
+            onSubmit={form.handleSubmit(handleSignin)}
+            className="grid gap-2"
+          >
             <FormField
               control={form.control}
               name="email"
@@ -71,12 +111,19 @@ export default function SignIn() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full mt-5">
-              Login
-            </Button>
-            <Button variant="outline" className="w-full">
+            {!isLoading ? (
+              <Button type="submit" className="w-full mt-5">
+                Sign Up
+              </Button>
+            ) : (
+              <Button disabled className="w-full mt-5">
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Please wait
+              </Button>
+            )}
+            {/* <Button variant="outline" className="w-full">
               Login with Google
-            </Button>
+            </Button> */}
           </form>
         </Form>
         <div className="mt-4 text-center text-sm">
