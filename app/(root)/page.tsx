@@ -1,7 +1,9 @@
+"use client";
+
+import UserProfile from "@/components/shared/user-profile";
+import { useUserContext } from "@/context/AuthContext";
+
 export default function Home() {
-  return (
-    <>
-      <h1 className="text-3xl">Home</h1>
-    </>
-  );
+  const { user } = useUserContext();
+  return <UserProfile {...user} />;
 }
