@@ -48,6 +48,17 @@ export default function SignUp() {
 
   const form = useForm<z.infer<typeof signUpFormSchema>>({
     resolver: zodResolver(signUpFormSchema),
+    defaultValues: {
+      // college: 'COLENG',
+      department: "",
+      email: "",
+      matricNumber: "",
+      name: "",
+      passwordForm: {
+        confirm: "",
+        password: "",
+      },
+    },
   });
 
   async function handleSignUp({
@@ -167,7 +178,10 @@ export default function SignUp() {
                 <FormItem>
                   <FormLabel>College</FormLabel>
                   <FormControl>
-                    <Select {...field}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select your college" />
                       </SelectTrigger>
