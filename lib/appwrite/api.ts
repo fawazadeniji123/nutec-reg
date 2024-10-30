@@ -41,23 +41,34 @@ export async function saveUserToDB(user: {
       appwriteConfig.databaseId,
       appwriteConfig.usersCollectionId,
       ID.unique(),
-      user,
-    )
+      {
+        userId: user.userId,
+        email: user.email,
+        name: user.name,
+        college: user.college,
+        department: user.department,
+        matricNumber: user.matricNumber,
+        imageUrl: user.imageUrl,
+      }
+    );
 
-    return newUser
+    return newUser;
   } catch (error) {
-    console.error(error)
-    return null
+    console.error(error);
+    return null;
   }
 }
 
 export async function signInUser(user: { email: string; password: string }) {
   try {
-    const session = await account.createEmailPasswordSession(user.email, user.password);
+    const session = await account.createEmailPasswordSession(
+      user.email,
+      user.password
+    );
 
-    return session
+    return session;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 }
 
@@ -85,7 +96,7 @@ export async function getCurrentUser() {
       [Query.equal("userId", currentAccount.$id)]
     );
 
-    if (!currentUser) throw Error("Failed to get current user")
+    if (!currentUser) throw Error("Failed to get current user");
 
     return currentUser.documents[0];
   } catch (error) {
