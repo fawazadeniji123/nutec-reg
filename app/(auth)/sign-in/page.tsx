@@ -117,7 +117,7 @@ export default function SignIn() {
             />
             {!isLoading ? (
               <Button type="submit" className="w-full mt-5">
-                Sign Up
+                Log In
               </Button>
             ) : (
               <Button disabled className="w-full mt-5">
