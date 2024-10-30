@@ -8,7 +8,7 @@ export const appwriteConfig = {
 }
 
 export const client = new Client()
-  .setEndpoint(appwriteConfig.url) // Your API Endpoint
+  .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
   .setProject(appwriteConfig.projectId); // Your project ID
 
 export const databases = new Databases(client);
