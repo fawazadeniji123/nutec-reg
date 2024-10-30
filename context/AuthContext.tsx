@@ -71,14 +71,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    const cookieFallback = localStorage.getItem("cookieFallback");
-    if (
-      cookieFallback === "[]" ||
-      cookieFallback === null ||
-      cookieFallback === undefined
-    ) {
-      router.push("/sign-in");
-    }
+    // const cookieFallback = localStorage.getItem("cookieFallback");
+    // if (
+    //   cookieFallback === "[]" ||
+    //   cookieFallback === null ||
+    //   cookieFallback === undefined
+    // ) {
+    //   router.push("/sign-in");
+    // }
 
     checkAuthUser();
   }, [router]);
