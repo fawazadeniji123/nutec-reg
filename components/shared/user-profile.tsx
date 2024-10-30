@@ -58,20 +58,22 @@ export default function UserProfile() {
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 pb-4 sm:pb-6">
-        <Avatar className="h-24 w-24 sm:h-20 sm:w-20">
-          <AvatarImage src={imageUrl} alt={name} />
-          <AvatarFallback>
-            {name
-              .split(" ")
-              .map((n) => n[0])
-              .join("")}
-          </AvatarFallback>
-        </Avatar>
-        <div className="text-center sm:text-left">
-          <CardTitle className="text-2xl sm:text-3xl">{name}</CardTitle>
-          <p className="text-sm sm:text-base text-muted-foreground mt-1">
-            {email}
-          </p>
+        <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
+          <Avatar className="h-24 w-24 sm:h-20 sm:w-20">
+            <AvatarImage src={imageUrl} alt={name} />
+            <AvatarFallback>
+              {name
+                .split(" ")
+                .map((n) => n[0])
+                .join("")}
+            </AvatarFallback>
+          </Avatar>
+          <div className="text-center sm:text-left">
+            <CardTitle className="text-2xl sm:text-3xl">{name}</CardTitle>
+            <p className="text-sm sm:text-base text-muted-foreground mt-1">
+              {email}
+            </p>
+          </div>
         </div>
         <Button
           variant="outline"
