@@ -5,6 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUserContext } from "@/context/AuthContext";
+import { Button } from "../ui/button";
+import { LogOut } from "lucide-react";
+import { signOutAccount } from "@/lib/appwrite/api";
+import { useRouter } from "next/navigation";
 
 function ProfileSkeleton() {
   return (
@@ -37,9 +41,15 @@ function ProfileSkeleton() {
 }
 
 export default function UserProfile() {
+  const router = useRouter();
   const { user, isLoading } = useUserContext();
   const { userId, email, name, college, department, matricNumber, imageUrl } =
     user;
+
+  const handleLogout = () => {
+    signOutAccount();
+    router.push("/sign-in");
+  };
 
   if (isLoading) {
     return <ProfileSkeleton />;
@@ -63,6 +73,14 @@ export default function UserProfile() {
             {email}
           </p>
         </div>
+        <Button
+          variant="outline"
+          className="w-full sm:w-auto"
+          onClick={handleLogout}
+        >
+          <LogOut className="mr-2 h-4 w-4" />
+          Logout
+        </Button>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
