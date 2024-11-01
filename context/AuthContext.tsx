@@ -4,7 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 import { getCurrentUser } from "@/lib/appwrite/api";
 import { IUser } from "@/types";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export const INITIAL_USER = {
   email: "",
@@ -41,6 +41,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const router = useRouter();
+
   const checkAuthUser = async () => {
     setIsLoading(true);
     try {
@@ -70,8 +72,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    const cookieFallback = localStorage.getItem("cookieFallback");
+    if (!cookieFallback || cookieFallback === "[]") {
+      return router.push("/sign-in");
+    }
     checkAuthUser();
-  }, []);
+  }, [router]);
 
   const value = {
     user,
@@ -81,11 +87,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsAuthenticated,
     checkAuthUser,
   };
-
-  const cookieFallback = localStorage.getItem("cookieFallback");
-  if (!cookieFallback || cookieFallback === "[]") {
-    return redirect("/sign-in");
-  }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

@@ -1,16 +1,20 @@
 "use client";
 
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieFallback = localStorage.getItem("cookieFallback");
-  if (cookieFallback && cookieFallback !== "[]") {
-    return redirect("/");
-  }
+  const router = useRouter();
+  useEffect(() => {
+    const cookieFallback = localStorage.getItem("cookieFallback");
+    if (cookieFallback && cookieFallback !== "[]") {
+      return router.push("/");
+    }
+  });
 
   return <>{children}</>;
 }
