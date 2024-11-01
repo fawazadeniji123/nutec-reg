@@ -87,7 +87,7 @@ export default function UserProfile() {
       <CardContent>
         <div className="space-y-4">
           <div>
-            <h3 className="text-lg font-semibold mb-2">Academic Information</h3>
+            <h3 className="text-lg font-semibold mb-2">NUTEC profile</h3>
             <Separator className="my-2" />
             <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm sm:text-base">
               <div className="space-y-1">
