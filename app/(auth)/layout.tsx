@@ -1,6 +1,5 @@
-"use client"
+"use client";
 
-import { useUserContext } from "@/context/AuthContext";
 import { redirect } from "next/navigation";
 
 export default function AuthLayout({
@@ -8,8 +7,10 @@ export default function AuthLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { isAuthenticated } = useUserContext();
-  if (isAuthenticated) return redirect("/");
+  const cookieFallback = localStorage.getItem("cookieFallback");
+  if (cookieFallback && cookieFallback !== "[]") {
+    return redirect("/");
+  }
 
   return <>{children}</>;
 }

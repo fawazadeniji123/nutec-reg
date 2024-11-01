@@ -1,15 +1,9 @@
-"use client"
-
-import { useUserContext } from "@/context/AuthContext";
-import { redirect } from "next/navigation";
+import { AuthProvider } from "@/context/AuthContext";
 
 export default function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { isAuthenticated } = useUserContext();
-  if (!isAuthenticated) return redirect("/sign-in");
-  
-  return <>{children}</>;
+  return <AuthProvider>{children}</AuthProvider>;
 }

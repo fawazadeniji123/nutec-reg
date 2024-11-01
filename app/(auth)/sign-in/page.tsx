@@ -59,16 +59,16 @@ export default function SignIn() {
       });
     }
 
-    const isLoggedIn = await checkAuthUser();
+    // const isLoggedIn = await checkAuthUser();
 
-    if (!isLoggedIn) {
-      setIsLoading(false);
-      return toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "Login failed, please try again.",
-      });
-    }
+    // if (!isLoggedIn) {
+    //   setIsLoading(false);
+    //   return toast({
+    //     variant: "destructive",
+    //     title: "Uh oh! Something went wrong.",
+    //     description: "Login failed, please try again.",
+    //   });
+    // }
 
     form.reset();
 

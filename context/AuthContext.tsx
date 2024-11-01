@@ -4,7 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 import { getCurrentUser } from "@/lib/appwrite/api";
 import { IUser } from "@/types";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 export const INITIAL_USER = {
   email: "",
@@ -37,7 +37,6 @@ type IContextType = {
 const AuthContext = createContext<IContextType>(INITIAL_STATE);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const router = useRouter()
   const [user, setUser] = useState<IUser>(INITIAL_USER);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -71,17 +70,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    // const cookieFallback = localStorage.getItem("cookieFallback");
-    // if (
-    //   cookieFallback === "[]" ||
-    //   cookieFallback === null ||
-    //   cookieFallback === undefined
-    // ) {
-    //   router.push("/sign-in");
-    // }
-
     checkAuthUser();
-  }, [router]);
+  }, []);
 
   const value = {
     user,
@@ -91,6 +81,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsAuthenticated,
     checkAuthUser,
   };
+
+  const cookieFallback = localStorage.getItem("cookieFallback");
+  if (!cookieFallback || cookieFallback === "[]") {
+    return redirect("/sign-in");
+  }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

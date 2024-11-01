@@ -46,8 +46,8 @@ export default function UserProfile() {
   const { userId, email, name, college, department, matricNumber, imageUrl } =
     user;
 
-  const handleLogout = () => {
-    signOutAccount();
+  const handleLogout = async () => {
+    await signOutAccount();
     router.push("/sign-in");
   };
 
