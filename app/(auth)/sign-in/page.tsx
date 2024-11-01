@@ -23,7 +23,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useUserContext } from "@/context/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { signInUser } from "@/lib/appwrite/api";
 import { signInFormSchema } from "@/lib/validation";
@@ -35,7 +34,6 @@ export default function SignIn() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
-  const { checkAuthUser } = useUserContext();
 
   const form = useForm<z.infer<typeof signInFormSchema>>({
     resolver: zodResolver(signInFormSchema),
@@ -58,17 +56,6 @@ export default function SignIn() {
         description: "Login failed, please try again.",
       });
     }
-
-    // const isLoggedIn = await checkAuthUser();
-
-    // if (!isLoggedIn) {
-    //   setIsLoading(false);
-    //   return toast({
-    //     variant: "destructive",
-    //     title: "Uh oh! Something went wrong.",
-    //     description: "Login failed, please try again.",
-    //   });
-    // }
 
     form.reset();
 
